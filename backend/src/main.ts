@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
+import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 
 const PORT = process.env.PORT ?? 3000;
 
@@ -18,6 +19,9 @@ async function bootstrap() {
 
   // add cookie parser middleware
   app.use(cookieParser());
+
+  // add global exception filter middleware
+  app.useGlobalFilters(new AllExceptionsFilter());
 
   await app.listen(PORT);
 }
