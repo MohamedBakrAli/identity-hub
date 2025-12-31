@@ -5,7 +5,8 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { AppLogger } from '../../shared/logger/logger.service';
 
 /**
  * Global exception filter that catches all unhandled exceptions.
@@ -13,6 +14,8 @@ import { Request, Response } from 'express';
  */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+  constructor(private readonly logger: AppLogger) {}
+
   /**
    * Handles caught exceptions and sends a standardized error response.
    * @param exception - The caught exception (HttpException or unknown error)
@@ -26,13 +29,20 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    const message =
+    const exceptionResponse =
       exception instanceof HttpException
         ? exception.getResponse()
         : 'Internal server error';
 
-    response.status(status).json({
-      error: message,
-    });
+    const message =
+      typeof exceptionResponse === 'string'
+        ? exceptionResponse
+        : ((exceptionResponse as { message?: string }).message ??
+          'Internal server error');
+
+    const stack = exception instanceof Error ? exception.stack : undefined;
+
+    this.logger.error(message, stack);
+    response.status(status).json({ error: { message } });
   }
 }

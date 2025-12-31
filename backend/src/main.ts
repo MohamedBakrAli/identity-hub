@@ -4,9 +4,13 @@ import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { AppConfig } from './config/app.config';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from './shared/logger/winston.config';
+import { AppLogger } from './shared/logger/logger.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const logger = WinstonModule.createLogger(winstonConfig);
+  const app = await NestFactory.create(AppModule, { logger });
 
   // add validation pipe middleware
   app.useGlobalPipes(
@@ -20,7 +24,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   // add global exception filter middleware
-  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new AllExceptionsFilter(app.get(AppLogger)));
 
   await app.listen(AppConfig.port);
 }

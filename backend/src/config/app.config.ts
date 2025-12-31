@@ -11,4 +11,9 @@ export class AppConfig {
   static get nodeEnv(): string {
     return process.env.NODE_ENV || 'development';
   }
+
+  /** Whether the environment is production */
+  static get isProduction(): boolean {
+    return this.nodeEnv.toLowerCase().trim() === 'production';
+  }
 }
