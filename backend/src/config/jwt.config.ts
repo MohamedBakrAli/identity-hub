@@ -1,3 +1,5 @@
+import { StringValue } from 'ms';
+
 /**
  * JWT authentication configuration.
  */
@@ -8,7 +10,12 @@ export class JWTConfig {
   }
 
   /** Token expiration time (env: JWT_EXPIRES_IN, default: 1 hour) */
-  static get expiresIn(): string {
-    return process.env.JWT_EXPIRES_IN ?? '3600s';
+  static get expiresIn(): StringValue {
+    return (process.env.JWT_EXPIRES_IN ?? '1h') as StringValue;
+  }
+
+  /** Name of the cookie for authentication (default: Authentication) */
+  static get cookieName(): string {
+    return 'Authentication';
   }
 }

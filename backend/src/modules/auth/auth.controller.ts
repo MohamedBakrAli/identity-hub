@@ -1,0 +1,102 @@
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Res,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+import type { Response } from 'express';
+import { AuthService } from './auth.service';
+import { SignUpDto } from './dto/signup.dto';
+import { SignInDto } from './dto/signin.dto';
+import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { AppConfig } from 'src/config/app.config';
+import { JWTConfig } from 'src/config/jwt.config';
+import ms from 'ms';
+
+/**
+ * Controller handling authentication endpoints.
+ *
+ * Provides endpoints for user registration, login, logout, and profile retrieval.
+ * Uses HTTP-only cookies for secure JWT token storage.
+ *
+ * @class AuthController
+ */
+@Controller('auth')
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  /**
+   * Register a new user account.
+   *
+   * @param signUpDto - User registration data (email, password, name)
+   * @param res - Express response object for setting cookies
+   * @returns Success message
+   * @throws {BadRequestException} If user already exists
+   */
+  @Post('signup')
+  async signUp(
+    @Body() signUpDto: SignUpDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {
+    const { access_token } = await this.authService.signUp(signUpDto);
+    this.setAuthCookie(res, access_token);
+    return { message: 'Signed up successfully' };
+  }
+
+  /**
+   * Authenticate an existing user.
+   *
+   * @param signInDto - User credentials (email, password)
+   * @param res - Express response object for setting cookies
+   * @returns Success message
+   * @throws {UnauthorizedException} If credentials are invalid
+   */
+  @Post('signin')
+  @HttpCode(HttpStatus.OK)
+  async signIn(
+    @Body() signInDto: SignInDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {
+    const { access_token } = await this.authService.signIn(signInDto);
+    this.setAuthCookie(res, access_token);
+    return { message: 'Signed in successfully' };
+  }
+
+  /**
+   * Sign out the current user by clearing the authentication cookie.
+   *
+   * @param res - Express response object for clearing cookies
+   * @returns Success message
+   */
+  @Post('signout')
+  @UseGuards(JwtAuthGuard)
+  signout(@Res({ passthrough: true }) res: Response): { message: string } {
+    res.clearCookie(JWTConfig.cookieName);
+    return { message: 'Signed out successfully' };
+  }
+
+  /**
+   * Set the authentication cookie with the JWT token.
+   *
+   * Cookie configuration:
+   * - httpOnly: Prevents XSS attacks
+   * - secure: Only sent over HTTPS in production
+   * - sameSite: Prevents CSRF attacks
+   * - maxAge: Token expiration time
+   *
+   * @param res - Express response object
+   * @param token - JWT access token
+   */
+  private setAuthCookie(res: Response, token: string): void {
+    res.cookie(JWTConfig.cookieName, token, {
+      httpOnly: true,
+      secure: AppConfig.isProduction,
+      sameSite: 'strict',
+      maxAge: ms(JWTConfig.expiresIn),
+    });
+  }
+}

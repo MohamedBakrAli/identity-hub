@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
 
 /**
  * User schema for MongoDB.
@@ -20,7 +21,7 @@ export class User {
 }
 
 /** Mongoose document type for User */
-export type UserDocument = User & Document;
+export type UserDocument = HydratedDocument<User>;
 
 /** Mongoose schema generated from User class */
 export const UserSchema = SchemaFactory.createForClass(User);
