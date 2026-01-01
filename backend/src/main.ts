@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { AppConfig } from './config/app.config';
 import { WinstonModule } from 'nest-winston';
 import { winstonConfig } from './shared/logger/winston.config';
@@ -22,6 +23,9 @@ async function bootstrap() {
 
   // add cookie parser middleware
   app.use(cookieParser());
+
+  // add global response interceptor (wraps responses in { data: ... })
+  app.useGlobalInterceptors(new ResponseInterceptor());
 
   // add global exception filter middleware
   app.useGlobalFilters(new AllExceptionsFilter(app.get(AppLogger)));
