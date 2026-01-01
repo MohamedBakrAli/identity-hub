@@ -8,6 +8,12 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiCookieAuth,
+} from '@nestjs/swagger';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup.dto';
@@ -26,6 +32,7 @@ import ms from 'ms';
  *
  * @class AuthController
  */
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -38,6 +45,9 @@ export class AuthController {
    * @returns Success message
    * @throws {BadRequestException} If user already exists
    */
+  @ApiOperation({ summary: 'Register a new user' })
+  @ApiResponse({ status: 201, description: 'User registered successfully' })
+  @ApiResponse({ status: 400, description: 'User already exists' })
   @Post('signup')
   async signUp(
     @Body() signUpDto: SignUpDto,
@@ -56,6 +66,9 @@ export class AuthController {
    * @returns Success message
    * @throws {UnauthorizedException} If credentials are invalid
    */
+  @ApiOperation({ summary: 'Login with credentials' })
+  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({ status: 401, description: 'Invalid credentials' })
   @Post('signin')
   @HttpCode(HttpStatus.OK)
   async signIn(
@@ -74,6 +87,10 @@ export class AuthController {
    * @returns User profile data (id, email, name)
    * @throws {UnauthorizedException} If not authenticated
    */
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiCookieAuth()
+  @ApiResponse({ status: 200, description: 'User profile data' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async getProfile(
@@ -88,7 +105,12 @@ export class AuthController {
    * @param res - Express response object for clearing cookies
    * @returns Success message
    */
-  @Get('signout')
+  @ApiOperation({ summary: 'Logout current user' })
+  @ApiCookieAuth()
+  @ApiResponse({ status: 200, description: 'Logout successful' })
+  @ApiResponse({ status: 401, description: 'Not authenticated' })
+  @Post('signout')
+  @HttpCode(HttpStatus.OK)
   @UseGuards(JwtAuthGuard)
   signout(@Res({ passthrough: true }) res: Response): { message: string } {
     res.clearCookie(JWTConfig.cookieName);

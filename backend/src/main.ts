@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
@@ -30,6 +31,18 @@ async function bootstrap() {
   // add global exception filter middleware
   const appLogger = await app.resolve(AppLogger);
   app.useGlobalFilters(new AllExceptionsFilter(appLogger));
+
+  // setup OpenAPI/Swagger documentation (disabled in production)
+  if (!AppConfig.isProduction) {
+    const config = new DocumentBuilder()
+      .setTitle('IdentityHub API')
+      .setDescription('Authentication and user management API')
+      .setVersion('1.0')
+      .addCookieAuth('Authentication')
+      .build();
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+  }
 
   await app.listen(AppConfig.port);
 }

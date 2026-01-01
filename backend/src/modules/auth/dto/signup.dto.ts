@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, MinLength, Matches } from 'class-validator';
 
 /**
@@ -11,18 +12,22 @@ export class SignUpDto {
   /**
    * User's email address.
    * Must be a valid email format.
-   *
-   * @example "omar@example.com"
    */
+  @ApiProperty({
+    example: 'omar@example.com',
+    description: 'User email address',
+  })
   @IsEmail()
   email: string;
 
   /**
    * User's display name.
    * Must be at least 3 characters long.
-   *
-   * @example "Omar Mohamed"
    */
+  @ApiProperty({
+    example: 'Omar Mohamed',
+    description: 'User display name (min 3 characters)',
+  })
   @IsNotEmpty()
   @MinLength(3)
   name: string;
@@ -35,9 +40,12 @@ export class SignUpDto {
    * - At least one letter (a-z, A-Z)
    * - At least one digit (0-9)
    * - At least one special character (@$!%*#?&)
-   *
-   * @example "SecureP@ss1"
    */
+  @ApiProperty({
+    example: 'SecureP@ss1',
+    description:
+      'Password (min 8 chars, must contain letter, digit, and special char)',
+  })
   @IsNotEmpty()
   @MinLength(8)
   @Matches(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&]).*$/, {
