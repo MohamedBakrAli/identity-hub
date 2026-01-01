@@ -114,4 +114,20 @@ export class AuthService {
       access_token: this.jwtService.sign(payload),
     };
   }
+
+  /**
+   * Get user profile by ID
+   * @param userId - The user ID from JWT
+   * @returns User profile (without password)
+   */
+  async getProfile(
+    userId: string,
+  ): Promise<{ id: string; email: string; name: string }> {
+    const user = await this.usersService.findById(userId);
+    return {
+      id: user._id.toString(),
+      email: user.email,
+      name: user.name,
+    };
+  }
 }

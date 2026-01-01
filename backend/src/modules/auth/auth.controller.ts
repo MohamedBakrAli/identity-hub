@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/signup.dto';
 import { SignInDto } from './dto/signin.dto';
 import { JwtAuthGuard } from 'src/common/guards/jwt-auth.guard';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 import { AppConfig } from 'src/config/app.config';
 import { JWTConfig } from 'src/config/jwt.config';
 import ms from 'ms';
@@ -67,12 +68,27 @@ export class AuthController {
   }
 
   /**
+   * Get the authenticated user's profile.
+   *
+   * @param userId - User ID extracted from JWT token
+   * @returns User profile data (id, email, name)
+   * @throws {UnauthorizedException} If not authenticated
+   */
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  async getProfile(
+    @CurrentUser('id') userId: string,
+  ): Promise<{ id: string; email: string; name: string }> {
+    return this.authService.getProfile(userId);
+  }
+
+  /**
    * Sign out the current user by clearing the authentication cookie.
    *
    * @param res - Express response object for clearing cookies
    * @returns Success message
    */
-  @Post('signout')
+  @Get('signout')
   @UseGuards(JwtAuthGuard)
   signout(@Res({ passthrough: true }) res: Response): { message: string } {
     res.clearCookie(JWTConfig.cookieName);
