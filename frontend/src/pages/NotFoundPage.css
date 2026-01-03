@@ -1,0 +1,73 @@
+.notfound-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a3e 50%, #0d1b2a 100%);
+  color: #e0e0e0;
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+}
+
+.notfound-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.notfound-card {
+  text-align: center;
+  max-width: 480px;
+}
+
+.notfound-code {
+  display: block;
+  font-size: 8rem;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, #7b2cbf, #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 40px rgba(123, 44, 191, 0.3);
+}
+
+.notfound-card h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.75rem;
+  color: #fff;
+}
+
+.notfound-card p {
+  margin: 0 0 2rem 0;
+  font-size: 1rem;
+  color: #888;
+  line-height: 1.6;
+}
+
+.notfound-card .btn {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.notfound-card .btn-primary {
+  background: linear-gradient(135deg, #7b2cbf, #5a189a);
+  color: #fff;
+  border: 1px solid #7b2cbf;
+}
+
+.notfound-card .btn-primary:hover {
+  background: linear-gradient(135deg, #9d4edd, #7b2cbf);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(123, 44, 191, 0.4);
+}
+

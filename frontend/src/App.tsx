@@ -8,6 +8,7 @@ import "./App.css";
 import { HomePage } from "./pages/Home";
 import { SignupPage } from "./pages/SignupPage";
 import { SigninPage } from "./pages/SigninPage";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 /**
  * Root application component.
@@ -20,6 +21,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/signin" element={<SigninPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );
