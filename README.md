@@ -41,21 +41,24 @@ The application will be available at `http://localhost`
 
 ### Services
 
-| Service  | Description       | Port         |
-| -------- | ----------------- | ------------ |
-| nginx    | Reverse proxy     | 80 (exposed) |
-| frontend | React application | 4173         |
-| backend  | NestJS API        | 3000         |
-| mongo    | MongoDB database  | 27017        |
+| Service  | Description       | Port                 |
+| -------- | ----------------- | -------------------- |
+| nginx    | Reverse proxy     | 80 (exposed)         |
+| frontend | React application | 5173 (FRONTEND_PORT) |
+| backend  | NestJS API        | 3000 (BACKEND_PORT)  |
+| mongo    | MongoDB database  | 27017                |
 
 ## Project Structure
 
 ```
 IdentityHub/
-├── backend/          # NestJS API server
-├── frontend/         # React application
-├── nginx/            # Nginx reverse proxy config
+├── backend/              # NestJS API server
+│   └── README.md         # Backend documentation
+├── frontend/             # React application
+│   └── README.md         # Frontend documentation
+├── nginx/                # Nginx reverse proxy config
 ├── docker-compose.yml
+├── .env                  # Environment variables
 └── README.md
 ```
 
@@ -71,52 +74,25 @@ For detailed documentation, see the individual READMEs:
 Create a `.env` file in the project root:
 
 ```env
-# Backend
-PORT=3000
+# Ports
+FRONTEND_PORT=5173
+BACKEND_PORT=3000
+
+# Application
 NODE_ENV=development
 JWT_SECRET=your_jwt_secret_here
 JWT_EXPIRES_IN=1h
-
-# Database (overridden by docker-compose for containerized MongoDB)
-MONGODB_URI=mongodb://localhost:27017/auth_db
 ```
 
 ## API Endpoints
 
 | Method | Endpoint            | Description      | Auth     |
 | ------ | ------------------- | ---------------- | -------- |
+| GET    | `/api/health`       | Health check     | No       |
 | POST   | `/api/auth/signup`  | Register user    | No       |
 | POST   | `/api/auth/signin`  | Login            | No       |
 | GET    | `/api/auth/profile` | Get user profile | Required |
 | POST   | `/api/auth/signout` | Logout           | Required |
-
-## Development
-
-### Backend
-
-```bash
-cd backend
-npm install
-npm run start:dev
-```
-
-### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-## Testing
-
-```bash
-# Backend tests
-cd backend
-npm run test        # Unit tests
-npm run test:e2e    # E2E tests
-npm run test:cov    # Coverage report
-```
 
 ## License
 

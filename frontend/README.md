@@ -1,154 +1,99 @@
 # IdentityHub Frontend
 
-A modern React frontend for the IdentityHub authentication system built with Vite, TypeScript, and React 19.
+React 19 authentication UI built with Vite and TypeScript.
 
 ## Tech Stack
 
-- **React 19** - UI library
-- **TypeScript** - Type safety
-- **Vite 7** - Build tool and dev server
-- **React Router DOM** - Client-side routing
-- **React Hook Form** - Form handling
-- **Zod** - Schema validation
-- **ESLint** - Code linting
+| Technology       | Purpose             |
+| ---------------- | ------------------- |
+| React 19         | UI library          |
+| TypeScript       | Type safety         |
+| Vite 7           | Build tool          |
+| React Router DOM | Client-side routing |
+| React Hook Form  | Form handling       |
+| Zod              | Schema validation   |
 
 ## Project Structure
 
 ```
 src/
-├── api/              # API functions for backend communication
+├── api/              # Backend API calls
 │   └── auth.api.ts
 ├── components/       # Reusable UI components
 │   ├── Navbar.tsx
 │   ├── SigninForm.tsx
 │   └── SignupForm.tsx
-├── config/           # Configuration constants
+├── config/           # Configuration
 │   └── api.ts
-├── context/          # React context providers
+├── context/          # React context
 │   ├── authContext.ts
 │   └── AuthProvider.tsx
-├── hooks/            # Custom React hooks
+├── hooks/            # Custom hooks
 │   └── useAuth.ts
-├── pages/            # Page components
+├── pages/            # Route pages
 │   ├── Home.tsx
 │   ├── SigninPage.tsx
 │   ├── SignupPage.tsx
 │   └── NotFoundPage.tsx
-├── services/         # Service layer
+├── services/         # Business logic
 │   └── authService.ts
-├── types/            # TypeScript type definitions
+├── types/            # TypeScript types
 │   └── auth.ts
-├── App.tsx           # Root component with routing
-└── main.tsx          # Application entry point
+├── App.tsx           # Root component
+└── main.tsx          # Entry point
 ```
 
-## Getting Started
-
-### Prerequisites
-
-- Node.js 22+
-- npm 10+
-
-### Installation
+## Development
 
 ```bash
 # Install dependencies
 npm install
-```
 
-### Development
-
-```bash
-# Start development server
+# Start dev server (http://localhost:5173)
 npm run dev
-```
 
-The app will be available at `http://localhost:5173`
-
-### Build
-
-```bash
 # Build for production
 npm run build
 
 # Preview production build
 npm run preview
-```
 
-### Linting
-
-```bash
-# Run ESLint
+# Lint code
 npm run lint
 ```
 
-## Features
+## Pages
 
-### Authentication
+| Route     | Component    | Description       |
+| --------- | ------------ | ----------------- |
+| `/`       | Home         | Landing page      |
+| `/signup` | SignupPage   | User registration |
+| `/signin` | SigninPage   | User login        |
+| `*`       | NotFoundPage | 404 error         |
 
-- **Sign Up** - Register with email, name, and password
+## Authentication Features
 
+- **Sign Up** - Email, name, password with validation
   - Email format validation
-  - Name minimum 3 characters
-  - Password requirements: 8+ chars, letter, number, special character
-
-- **Sign In** - Login with email and password
-
-- **Sign Out** - Logout and clear session
-
-### Pages
-
-| Route     | Page         | Description                   |
-| --------- | ------------ | ----------------------------- |
-| `/`       | HomePage     | Landing page with auth status |
-| `/signup` | SignupPage   | User registration             |
-| `/signin` | SigninPage   | User login                    |
-| `*`       | NotFoundPage | 404 error page                |
-
-## Deployment
-
-Deployment is done via Docker using `docker-compose` from the project root.
-
-### Full Stack Deployment
-
-From the project root directory:
-
-```bash
-# Build and start all services (frontend, backend, mongodb, nginx)
-docker-compose up --build
-
-# Run in detached mode
-docker-compose up -d --build
-
-# Stop all services
-docker-compose down
-```
-
-The application will be available at `http://localhost`
-
-### Services
-
-| Service  | Description              | Internal Port |
-| -------- | ------------------------ | ------------- |
-| nginx    | Reverse proxy            | 80 (exposed)  |
-| frontend | React app (Vite preview) | 4173          |
-| backend  | NestJS API               | 3000          |
-| mongo    | MongoDB database         | 27017         |
-
-### Standalone Docker Build
-
-```bash
-# Build frontend image
-docker build -t identityhub-frontend .
-
-# Run frontend container
-docker run -p 4173:4173 identityhub-frontend
-```
+  - Name: minimum 3 characters
+  - Password: 8+ chars, letter, number, special character
+- **Sign In** - Email and password login
+- **Sign Out** - Clear session and logout
 
 ## Environment Variables
 
-Create a `.env` file in the project root:
+| Variable | Default | Description |
+| -------- | ------- | ----------- |
+| `PORT`   | `5173`  | Server port |
 
-```env
-VITE_API_URL=/api
+## Docker
+
+```bash
+# Build image
+docker build -t identityhub-frontend .
+
+# Run container
+docker run -p 5173:5173 -e FRONTEND_PORT=5173 identityhub-frontend
 ```
+
+> **Note:** For full-stack deployment, use `docker-compose` from the project root. See the [main README](../README.md).
