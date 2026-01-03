@@ -5,53 +5,19 @@
 
 import type { FC } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { Navbar } from "../components/Navbar";
 import "./Home.css";
 
 /**
  * Main home page with navigation header.
- * Shows login/signup buttons when logged out, user info when logged in.
+ * Shows welcome message based on authentication state.
  */
 export const HomePage: FC = () => {
-  const { user, isLoggedIn, signout } = useAuth();
-
-  const handleSignout = async () => {
-    await signout();
-  };
+  const { user, isLoggedIn } = useAuth();
 
   return (
     <div className="home-container">
-      <header className="header">
-        <div className="header-brand">
-          <h1>IdentityHub</h1>
-        </div>
-        <nav className="header-nav">
-          {isLoggedIn ? (
-            <div className="user-section">
-              <div className="user-card">
-                <span className="user-avatar">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </span>
-                <div className="user-info">
-                  <span className="user-name">{user?.name}</span>
-                  <span className="user-email">{user?.email}</span>
-                </div>
-              </div>
-              <button className="btn btn-secondary" onClick={handleSignout}>
-                Logout
-              </button>
-            </div>
-          ) : (
-            <div className="auth-buttons">
-              <a href="/signin" className="btn btn-secondary">
-                Sign In
-              </a>
-              <a href="/signup" className="btn btn-primary">
-                Sign Up
-              </a>
-            </div>
-          )}
-        </nav>
-      </header>
+      <Navbar />
 
       <main className="main-content">
         <div className="hero">
