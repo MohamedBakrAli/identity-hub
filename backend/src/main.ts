@@ -28,7 +28,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   // add global exception filter middleware
-  app.useGlobalFilters(new AllExceptionsFilter(app.get(AppLogger)));
+  const appLogger = await app.resolve(AppLogger);
+  app.useGlobalFilters(new AllExceptionsFilter(appLogger));
 
   await app.listen(AppConfig.port);
 }
