@@ -23,7 +23,7 @@ npm run start:prod
 | POST   | `/auth/signup`  | Register user | No   |
 | POST   | `/auth/signin`  | Login         | No   |
 | GET    | `/auth/profile` | Get profile   | Yes  |
-| GET    | `/auth/signout` | Logout        | Yes  |
+| POST   | `/auth/signout` | Logout        | Yes  |
 
 ## Project Structure
 
